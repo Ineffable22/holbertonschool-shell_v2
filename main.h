@@ -8,16 +8,23 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <errno.h>
 
 extern char **environ;
+extern errno;
 
 /* Structures */
 
 typedef struct General
 {
+	char *exe;
+	int n;
+	char *buff;
 	char **token;
 	struct Envi *env;
 	int res;
+	int bol;
+	char *msg;
 } general;
 
 typedef struct Envi
@@ -39,6 +46,7 @@ typedef struct Cmd {
 void response_signal(int x);
 envi *reload_env(char **enviroment, envi *envi);
 envi *add_node(char *enviroment, envi *env);
+void prompt(char *p, general *go);
 
 /*_____go_match.c_____*/
 general *go_match(general *go);
@@ -56,6 +64,8 @@ envi *search_env(char *str, envi *env);
 general *shell_clear(general *go);
 general *print_working_directory(general *go);
 envi *set_env(char *key, char *value, envi *env);
+general *exit_time(general *go);
+void message_error(general *go);
 
 /*_____utilities.c_____*/
 void printer(envi *env);
@@ -64,6 +74,7 @@ void _free2(char **env);
 
 /*_____holbie_tools.c_____*/
 int _strstr(char *s1, char *s2);
+int _strncmp(char *s1, char *s2, int n);
 int _strlen(char *s);
 int _strlen2(char **s);
 char *_strcpy(char *dest, char *src);
