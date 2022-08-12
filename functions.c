@@ -4,6 +4,8 @@ general * go_bypass(general *go, char *buffer, int size)
 {
 	int i = 0;
 
+	go->bol = 0;
+	go->buff = buffer;
 	go->token = malloc(sizeof(char *) * size);
 	if (go->token == NULL)
 	{
@@ -18,11 +20,19 @@ general * go_bypass(general *go, char *buffer, int size)
 	}
 
 	go = go_match(go);
-	if (go->res == 0)
-		go->res = functions_bin(go);
-	if (go->res == 0)
-		printf("%s: command not found\n", go->token[0]);
+	if (go->bol == 0)
+		go->bol = functions_bin(go);
+	if (go->bol == 0)
+	{
+		if (isatty(STDIN_FILENO))
+			printf("%s: command not found\n", go->token[0]);
+		else
+			printf("%s: %d: %s: not found\n", go->exe, go->n, go->token[0]);
+		go->res = 127;
+	}
+	printf("respuesta => %d\n", go->bol);
 	free(go->token);
+	
 	return (go);
 }
 
@@ -65,9 +75,9 @@ int functions_bin(general *go)
 	int status = 0;
 	char *path = NULL;
 
+	printf("AAAAAAAAAAA\n");
 	if ((path = _access(go->token[0], go->env)) == NULL)
 		return (0);
-
 	child = fork();
 	if (child == 0)
 	{
