@@ -9,6 +9,7 @@ general *go_match(general *go)
 		{"clear", shell_clear},
 		{"cd", change_directory},
 		{"pwd", print_working_directory},
+		{"exit", exit_time},
 		{NULL, NULL}
 	};
 
