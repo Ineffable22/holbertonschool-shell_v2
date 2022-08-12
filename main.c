@@ -7,21 +7,27 @@ int main(int argc, char **argv, char **enviroment)
 	int i = 0;
 	char *buffer = NULL;
 	size_t size = 0;
+	char *user = "#Cisfun";
 
 	(void) argc;
 	(void) argv;
+	errno = 0;
 
 	signal(SIGINT, response_signal);
-	go = malloc(sizeof(general));
+	go = _calloc(1, sizeof(general));
 	if (go == NULL)
 		return (-1);
+	go->exe = argv[0];
 	go->env = NULL;
 	go->env = reload_env(enviroment, go->env);
 	if (go->env == NULL)
 		return (-1);
 	while(i != EOF)
 	{
-		write(1, "#Cisfun$ ", 9);
+		if (isatty(STDIN_FILENO))
+			prompt(user, go);
+		else
+			go->n += 1;
 		i = getline(&buffer, &size, stdin);
 		/*printf("Buffer -> %s\t response -> %d\n", buffer, i);*/
 		if (i > 1)
@@ -29,10 +35,23 @@ int main(int argc, char **argv, char **enviroment)
 			go = go_bypass(go, buffer, i);
 		}
 	}
+	i = go->res;
 	_free(go->env);
 	free(go);
 	free(buffer);
-	return (0);
+	return (i);
+}
+
+void prompt(char *p, general *go)
+{
+	envi *home = search_env("HOME", go->env);
+	envi *path = search_env("PWD", go->env);
+	int len = strlen(home->value);
+
+	if (_strncmp(path->value, home->value, len) == 1)
+		printf("%s:~%s$ ", p, &path->value[len]);
+	else
+		printf("%s:%s$ ", p, path->value);
 }
 
 void response_signal(int x)
