@@ -103,6 +103,31 @@ char *_strncpy(char *dest, char *src, int n)
 }
 
 /**
+ * _strncpy - copies a string
+ * @dest: destination string
+ * @src: source string
+ * @n: number of bytes to copy
+ *
+ * Return: pointer to the resulting string
+ */
+char **_strncpy2(char **dest, char **src, int n)
+{
+	int i;
+
+	dest = _calloc((n + 1), sizeof(char *));
+
+	for (i = 0; i < n && src[i] != 0; i++)
+		dest[i] = src[i];
+	while (i < n)
+	{
+		dest[i] = 0;
+		i++;
+	}
+	return (dest);
+}
+
+
+/**
  * *_calloc - allocates memory for an array
  * @nmemb: number of elements in the array
  * @size: size of each element
@@ -167,14 +192,34 @@ char *_realloc(char *ptr, unsigned int size)
  */
 int _strcmp(char *s1, char *s2)
 {
-	while (*s1 == *s2)
+	while (*s1 == *s2 && *s1 && *s2)
 	{
-		if (*s1 == 0)
-		{
-			return (0);
-		}
 		s1++;
 		s2++;
 	}
+	if (!*s1 && !*s2)
+		return (0);
 	return (*s1 - *s2);
+}
+
+
+/**
+ * _lexers_cmp - compares two strings
+ * @s1: first string to compare
+ * @s2: second string to compare
+ *
+ * Return: less than 0 if s1 is less than s2, 0 if they're equal,
+ * more than 0 if s1 is greater than s2
+ */
+int _lexers_cmp(char *s1, char *s2)
+{
+	int i = 0;
+
+	if (_strcmp(s1, s2) == 0)
+		return (1);
+	i = *s1 - 48;
+	s1++;
+	if (_strcmp(s1, s2) == 0)
+		return (i);
+	return (-1);
 }
