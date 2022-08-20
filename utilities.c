@@ -19,14 +19,12 @@ void _free(envi *env)
 		free(env);
 	}
 }
-/*
-void _free2(char **env)
+
+void free_section(char **token, int res)
 {
-	while (go->env)
+	while(token[res])
 	{
-		free(go->env->key);
-		free(go->env->value);
-		free(go->env);
-		go->env = go->env->next;
+		free(token[res]);
+		res++;
 	}
-}*/
+}
