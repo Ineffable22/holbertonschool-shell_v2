@@ -24,10 +24,9 @@ int main(int argc, char **argv, char **enviroment)
 		return (-1);
 	while(i != EOF)
 	{
+		go->n += 1;
 		if (isatty(STDIN_FILENO))
 			prompt(user, go);
-		else
-			go->n += 1;
 		i = getline(&buffer, &size, stdin);
 		/*printf("Buffer -> %s\t response -> %d\n", buffer, i);*/
 		if (i > 1)
@@ -57,7 +56,7 @@ void prompt(char *p, general *go)
 void response_signal(int x)
 {
 	(void) x;
-	write(1, "\n#Cisfun$ ", 10);
+	write(1, "\n#Cisfun:~$ ", 10);
 }
 
 envi *reload_env(char **enviroment, envi *env)
