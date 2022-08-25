@@ -81,7 +81,7 @@ general *change_directory(general *go)
 	go->res = 0;
 	getcwd(path_old, sizeof(path_old));
 	if (go->token[1] == NULL || *go->token[1] == '~' ||
-	!strcmp(go->token[1], "$HOME"))
+	_strcmp(go->token[1], "$HOME") == 0)
 	{
 		section = search_env("HOME", go->env);
 		chdir(section->value);
