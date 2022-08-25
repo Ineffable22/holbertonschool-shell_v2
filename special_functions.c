@@ -82,8 +82,8 @@ general *history(general *go)
 
 	section = search_env("HOME", go->env);
 	file = malloc((_strlen(name) + _strlen(section->value) + 1) * sizeof(char));
-	strcpy(file, section->value);
-	strcpy(&file[_strlen(section->value)], name);
+	_strcpy(file, section->value);
+	_strcpy(&file[_strlen(section->value)], name);
 
 	fd = open(file, O_CREAT | O_RDONLY, 0666);
 	if (fd == -1)
