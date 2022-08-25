@@ -24,7 +24,7 @@ general *go_bypass(general *go, char *buffer)
 		go = validate_stream(go);
 		if (go->res != 1 && go->res != 2)
 		{
-			go = go_match(go);
+			go = built_in(go);
 			if (go->bol == 0)
 				go->bol = functions_bin(go);
 			if (go->bol == 0)

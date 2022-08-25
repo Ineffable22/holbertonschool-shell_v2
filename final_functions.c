@@ -1,12 +1,12 @@
 #include "main.h"
 
 /**
- * go_match - Checks if matches with the value of the pointer to structure
+ * built_in - Checks if matches with the value of the pointer to structure
  * @go: Pointer to Structure General
  *
  * Return: Pointer to Structure General
  */
-general *go_match(general *go)
+general *built_in(general *go)
 {
 	int i = 0, res = 0;
 	cmd flag_store[] = {

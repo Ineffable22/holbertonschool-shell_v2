@@ -147,14 +147,14 @@ void precmd(general *go, char *file);
 general *history(general *go);
 general *help(general *go);
 
-/*_____go_match_1.c_____*/
+/*_____built_in_1.c_____*/
 general *print_env(general *go);
 general *who_am_i(general *go);
 general *shell_clear(general *go);
 general *change_directory(general *go);
 void errno_case(general *go);
 
-/*_____go_match_2.c_____*/
+/*_____built_in_2.c_____*/
 general *print_working_directory(general *go);
 general *exit_time(general *go);
 general *shell_setenv(general *go);
@@ -162,7 +162,7 @@ general *shell_unsetenv(general *go);
 general *PS1(general *go);
 
 /*_____final_functions.c_____*/
-general *go_match(general *go);
+general *built_in(general *go);
 int stream_match(general *go, tokens *tk, char *exe);
 int functions_bin(general *go);
 char **get_env(envi *env, char **environ);
