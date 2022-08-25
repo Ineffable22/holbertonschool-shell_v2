@@ -15,10 +15,11 @@ int main(int argc, char **argv, char **enviroment)
 	char *buffer = NULL;
 	size_t size = 0;
 	char *user = "#Cisfun";
+	char *file = NULL;
+	envi *home = NULL;
 
 	(void) argc;
 	errno = 0;
-
 	signal(SIGINT, response_signal);
 	go = _calloc(1, sizeof(general));
 	if (go == NULL)
@@ -28,6 +29,11 @@ int main(int argc, char **argv, char **enviroment)
 	go->env = reload_env(enviroment, go->env);
 	if (go->env == NULL)
 		return (-1);
+	home = search_env("HOME", go->env);
+	file = malloc((_strlen(home->value) + 8) * sizeof(char));
+	_strcpy(file, home->value);
+	_strcpy(&file[_strlen(home->value)], "/.hshrc");
+	precmd(go, file), free(file);
 	if (argv[1])
 		precmd(go, argv[1]);
 	go->is_file = 0;
@@ -42,8 +48,7 @@ int main(int argc, char **argv, char **enviroment)
 	}
 	i = go->res;
 	_free_env(go->env, go->PS1);
-	free(go);
-	free(buffer);
+	free(go), free(buffer);
 	return (i);
 }
 
