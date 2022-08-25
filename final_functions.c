@@ -170,6 +170,11 @@ char *_access(char *token, envi *env)
 	char *exe = NULL;
 	char *file = NULL;
 
+	if (token[0] == '.')
+	{
+		if (!token[1] || (token[1] == '.' && !token[2]))
+			return (NULL);
+	}
 	section = search_env("PATH", env);
 	file = _calloc(len + 2, sizeof(char));
 	_strcpy(file, "/");
