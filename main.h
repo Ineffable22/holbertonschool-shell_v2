@@ -138,6 +138,7 @@ void add_history(general *buff);
 
 /*_____free_fd.c_____*/
 general *_free_fd(general *go);
+int _atoi(char *str, int *res);
 
 /*_____special_functions.c_____*/
 envi *search_env(char *str, envi *env);

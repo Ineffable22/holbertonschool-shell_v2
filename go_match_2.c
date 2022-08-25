@@ -44,8 +44,16 @@ general *exit_time(general *go)
 		go->bol = 1;
 		return (go);
 	}
-	num = atoi(go->token[1]);
-	num = (num != 0) ? num : 2;
+	go->res = 0;
+	num = _atoi(go->token[1], &go->res);
+	if (go->res == 2)
+	{
+		go->msg = "numeric argument required";
+		message_error(go, 0, NULL);
+		go->bol = 1;
+		return (go);
+	}
+	/*num = (num != 0) ? num : 2;*/
 	free(go->buff);
 	_free_env(go->env, go->PS1);
 	_free_double(go->token);
@@ -53,6 +61,7 @@ general *exit_time(general *go)
 	free(go);
 	exit(num);
 }
+
 
 /**
  * shell_setenv - Set a value in the Singly linked list Envi

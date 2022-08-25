@@ -20,6 +20,7 @@ general *go_bypass(general *go, char *buffer)
 		buffer = NULL;
 	while (go->end == 0)
 	{
+		go->res = 0;
 		go = validate_stream(go);
 		if (go->res != 1 && go->res != 2)
 		{

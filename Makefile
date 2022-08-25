@@ -4,7 +4,7 @@ GDB = gdb
 SRC = *.c
 NAME = hsh
 CFLAGS = -Wall -Werror -Wextra -pedantic
-GFLAGS = -g
+GFLAG = -g
 VFLAGS = --tool=memcheck --track-origins=yes --leak-check=full --show-leak-kinds=all -s
 
 all: clean run
@@ -15,6 +15,7 @@ run: *.h *.c
 
 rungdb: *.h *.c
 	$(CC) $(SRC) $(CFLAGS) $(GFLAG) -o $(NAME)
+	$(GDB) $(NAME)
 
 # optional ARGS="FILENAME"
 val: run

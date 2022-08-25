@@ -113,7 +113,8 @@ int functions_bin(general *go)
 	}
 	else if (child == 0)
 	{
-		go->res = execve(path, go->token, env);
+		if (execve(path, go->token, env) == -1)
+			perror("socket failed");
 		close(4);
 		kill(getpid(), SIGKILL);
 	}

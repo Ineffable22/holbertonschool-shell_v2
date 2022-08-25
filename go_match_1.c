@@ -78,25 +78,36 @@ general *change_directory(general *go)
 	envi *section = NULL;
 	int bol = 0;
 
-	go->res = 0;
 	getcwd(path_old, sizeof(path_old));
 	if (go->token[1] == NULL || *go->token[1] == '~' ||
 	_strcmp(go->token[1], "$HOME") == 0)
 	{
-		section = search_env("HOME", go->env);
-		chdir(section->value);
+		section = search_env("HOME", go->env), chdir(section->value);
 	}
-	else if (*go->token[1] == '-')
+	else if (go->token[2])
 	{
-		section = search_env("OLDPWD", go->env);
-		chdir(section->value);
+		printf("%s: %d: cd: too many arguments\n", go->exe, go->n);
+		go->res = 1, bol = 1;
+	}
+	else if ((go->token[1])[0] == '-')
+	{
+		if ((go->token[1])[1])
+		{
+			printf("%s: %d: cd: -%c: invalid option\n",
+			go->exe, go->n, (go->token[1])[1]);
+			printf("cd: usage: cd [-L|[-P [-e]] [-@]] [dir]\n");
+			go->res = 2, bol = 1;
+		}
+		else
+		{
+			section = search_env("OLDPWD", go->env);
+			if (!isatty(STDIN_FILENO))
+				printf("%s\n", section->value);
+			chdir(section->value);
+		}
 	}
 	else if (chdir(go->token[1]) == -1)
-	{
-		errno_case(go);
-		bol = 1;
-		go->res = 1;
-	}
+		errno_case(go), bol = 1, go->res = 1;
 	if (bol == 0)
 		getcwd(path_new, sizeof(path_new));
 	go->env = set_env("OLDPWD", path_old, go->env);
