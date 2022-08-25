@@ -4,36 +4,35 @@
  * main - Principal funcion of The Gates of Shell
  * @argc: Number of arguments
  * @argv: pointer to arguments
- * @enviroment: Content of environment variables
+ * @environment: Content of environment variables
  *
  * Return: Status code
  */
-int main(int argc, char **argv, char **enviroment)
+int main(int argc, char **argv, char **environment)
 {
 	struct General *go = NULL;
 	int i = 0;
 	char *buffer = NULL;
 	size_t size = 0;
-	char *user = "#Cisfun";
-	char *file = NULL;
+	char *user = "#Cisfun",	*file = NULL;
 	envi *home = NULL;
 
 	(void) argc;
-	errno = 0;
-	signal(SIGINT, response_signal);
+	errno = 0, signal(SIGINT, response_signal);
 	go = _calloc(1, sizeof(general));
 	if (go == NULL)
 		return (-1);
 	go->exe = argv[0], go->PS1 = NULL;
 	go->env = NULL, go->res = 0, go->is_file = 1;
-	go->env = reload_env(enviroment, go->env);
-	if (go->env == NULL)
-		return (-1);
-	home = search_env("HOME", go->env);
-	file = malloc((_strlen(home->value) + 8) * sizeof(char));
-	_strcpy(file, home->value);
-	_strcpy(&file[_strlen(home->value)], "/.hshrc");
-	precmd(go, file), free(file);
+	go->env = reload_env(environment, go->env);
+	if (go->env)
+	{
+		home = search_env("HOME", go->env);
+		file = malloc((_strlen(home->value) + 8) * sizeof(char));
+		_strcpy(file, home->value);
+		_strcpy(&file[_strlen(home->value)], "/.hshrc");
+		precmd(go, file), free(file);
+	}
 	if (argv[1])
 		precmd(go, argv[1]);
 	go->is_file = 0;
@@ -66,17 +65,19 @@ void response_signal(int x)
 
 /**
  * reload_env - Saves the environment variables in the singly linked list Envi
- * @enviroment: Content of environment variables
+ * @environment: Content of environment variables
  * @env: Pointer to Singly linked list with the environment variables
  *
  * Return: Singly linked list with the environment variables
  */
-envi *reload_env(char **enviroment, envi *env)
+envi *reload_env(char **environment, envi *env)
 {
 	int i = 0;
 
-	for (; enviroment[i]; i++)
-		env = add_node(enviroment[i], env);
+	if (environment == NULL)
+		return (NULL);
+	for (; environment[i]; i++)
+		env = add_node(environment[i], env);
 	return (env);
 }
 
@@ -90,17 +91,29 @@ envi *reload_env(char **enviroment, envi *env)
  */
 void prompt(char *p, general *go)
 {
-	envi *home = search_env("HOME", go->env);
+	envi *home = NULL;
 	envi *path = NULL;
-	int len = _strlen(home->value);
+	int len = 0;
 
+	home = search_env("HOME", go->env);
+	if (home == NULL)
+	{
+		printf("%s$ ", p);
+		return;
+	}
+	len = _strlen(home->value);
 	if (go->PS1 == NULL)
 	{
 		path = search_env("PWD", go->env);
-		if (_strncmp(path->value, home->value, len) == 1)
-			printf("%s:~%s$ ", p, &path->value[len]);
+		if (path != NULL)
+		{
+			if (_strncmp(path->value, home->value, len) == 1)
+				printf("%s:~%s$ ", p, &path->value[len]);
+			else
+				printf("%s:%s$ ", p, path->value);
+		}
 		else
-			printf("%s:%s$ ", p, path->value);
+			printf("%s:$ ", p);
 	}
 	else
 	{

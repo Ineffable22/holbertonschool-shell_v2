@@ -10,8 +10,16 @@
  */
 envi *search_env(char *str, envi *env)
 {
-	while (env && _strcmp(env->key, str) != 0)
+	if (!env)
+		return (NULL);
+	while (env)
+	{
+		if (!env->key)
+			return (NULL);
+		if (_strcmp(env->key, str) == 0)
+			break;
 		env = env->next;
+	}
 	return (env);
 }
 
@@ -26,17 +34,42 @@ envi *search_env(char *str, envi *env)
  */
 envi *set_env(char *key, char *value, envi *env)
 {
-	envi *new = env;
+	envi *new = env, *prev = NULL;
+	int bol = 0;
 
-	while (new)
+	if (env == NULL)
 	{
-		if (_strcmp(new->key, key) == 0)
+		env = _calloc(1, sizeof(envi));
+		env->key = _calloc((_strlen(key) + 1), sizeof(char));
+		_strcpy(env->key, key);
+
+		env->value = _calloc((_strlen(value) + 1), sizeof(char));
+		_strcpy(env->value, value);
+	}
+	else
+	{
+		while (new)
 		{
-			free(new->value);
-			new->value = malloc((_strlen(value) + 1) * sizeof(char));
-			_strcpy(new->value, value);
+
+			if (_strcmp(new->key, key) == 0)
+			{
+				free(new->value);
+				new->value = malloc((_strlen(value) + 1) * sizeof(char));
+				_strcpy(new->value, value);
+				bol = 1;
+			}
+			prev = new;
+			new = new->next;
 		}
-		new = new->next;
+		if (bol == 0)
+		{
+			prev->next = _calloc(1, sizeof(envi));
+			prev->next->key = _calloc((_strlen(key) + 1), sizeof(char));
+			_strcpy(prev->next->key, key);
+
+			prev->next->value = _calloc((_strlen(value) + 1), sizeof(char));
+			_strcpy(prev->next->value, value);
+		}
 	}
 	return (env);
 }

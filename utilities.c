@@ -100,7 +100,7 @@ void message_error(general *go, char val, char *tok)
 	}
 	else if (val == 2)
 	{
-		if (isatty(STDIN_FILENO))
+		if (isatty(STDIN_FILENO) && go->env)
 			printf("%s: command not found\n", go->token[0]);
 		else
 		{

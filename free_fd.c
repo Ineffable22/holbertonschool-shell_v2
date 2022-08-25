@@ -64,7 +64,7 @@ int _atoi(char *str, int *res)
 		if (str[1] == '-' && !str[2])
 			return (num);
 		else if (str[1])
-		{	
+		{
 			abs = -1;
 			zero++;
 		}

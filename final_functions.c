@@ -16,8 +16,8 @@ general *built_in(general *go)
 		{"cd", change_directory},
 		{"pwd", print_working_directory},
 		{"exit", exit_time},
-		{"set", shell_setenv},
-		{"unset", shell_unsetenv},
+		{"setenv", shell_setenv},
+		{"unsetenv", shell_unsetenv},
 		{"history", history},
 		{"help", help},
 		{"PS1", PS1},
@@ -176,6 +176,8 @@ char *_access(char *token, envi *env)
 			return (NULL);
 	}
 	section = search_env("PATH", env);
+	if (section == NULL)
+		return (NULL);
 	file = _calloc(len + 2, sizeof(char));
 	_strcpy(file, "/");
 	_strcpy(&file[1], token);

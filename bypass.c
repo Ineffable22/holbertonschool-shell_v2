@@ -139,12 +139,13 @@ char *is_var(envi *env, char *buffer, int res)
 tokens *add_token(envi *env, int res, tokens **token, char *buffer)
 {
 	tokens *node = NULL, *tmp = (*token);
-	char *var = NULL;
+	char *var = buffer;
 
 	if (buffer == NULL)
 		return (NULL);
 	node = _calloc(1, sizeof(tokens));
-	var = is_var(env, buffer, res);
+	if (env)
+		var = is_var(env, buffer, res);
 
 	node->token = _calloc(_strlen(var) + 1, sizeof(char));
 	if (node->token == NULL)
@@ -180,7 +181,11 @@ void add_history(general *go)
 	char *file = NULL;
 	char *name = "/.hsh_history";
 
+	if (!go->env)
+		return;
 	section = search_env("HOME", go->env);
+	if (section == NULL)
+		return;
 
 	file = malloc((_strlen(name) + _strlen(section->value) + 1) * sizeof(char));
 	_strcpy(file, section->value);

@@ -75,37 +75,41 @@ general *shell_setenv(general *go)
 
 	if (go->token[1] && go->token[2])
 	{
-		env = search_env(go->token[1], go->env);
-		if (env == NULL)
-		{
-			node = _calloc(1, sizeof(envi));
-			node->key = _calloc((_strlen(go->token[1]) + 1), sizeof(char));
-			_strcpy(node->key, go->token[1]);
-
-			node->value = _calloc((_strlen(go->token[2]) + 1), sizeof(char));
-			_strcpy(node->value, go->token[2]);
-			if (go->env == NULL)
-				go->env = node;
-			else
-			{
-				while (tmp->next)
-					tmp = tmp->next;
-
-				tmp->next = node;
-			}
-		}
+		if (!go->env)
+			go->env = set_env(go->token[1], go->token[2], go->env);
 		else
 		{
-			while (tmp->key != env->key)
-				tmp = tmp->next;
+			env = search_env(go->token[1], go->env);
+			if (env == NULL)
+			{
+				node = _calloc(1, sizeof(envi));
+				node->key = _calloc((_strlen(go->token[1]) + 1), sizeof(char));
+				_strcpy(node->key, go->token[1]);
 
-			free(tmp->value);
-			tmp->value = _calloc((_strlen(go->token[2]) + 1), sizeof(char));
-			_strcpy(tmp->value, go->token[2]);
+				node->value = _calloc((_strlen(go->token[2]) + 1), sizeof(char));
+				_strcpy(node->value, go->token[2]);
+				if (go->env == NULL)
+					go->env = node;
+				else
+				{
+					while (tmp->next)
+						tmp = tmp->next;
+
+					tmp->next = node;
+				}
+			}
+			else
+			{
+				while (tmp->key != env->key)
+					tmp = tmp->next;
+
+				free(tmp->value);
+				tmp->value = _calloc((_strlen(go->token[2]) + 1), sizeof(char));
+				_strcpy(tmp->value, go->token[2]);
+			}
 		}
 	}
-	go->res = 0;
-	go->bol = 1;
+	go->res = 0, go->bol = 1;
 	return (go);
 }
 
@@ -117,7 +121,7 @@ general *shell_setenv(general *go)
  */
 general *shell_unsetenv(general *go)
 {
-	envi *env = NULL, *prev = go->env, *tmp = go->env;
+	envi *env = NULL, *prev = NULL, *tmp = go->env;
 
 	if (go->token[1])
 	{
@@ -129,7 +133,10 @@ general *shell_unsetenv(general *go)
 				prev = tmp;
 				tmp = tmp->next;
 			}
-			prev->next = tmp->next;
+			if (prev == NULL)
+				go->env = tmp->next;
+			else
+				prev->next = tmp->next;
 			free(tmp->key);
 			free(tmp->value);
 			free(tmp);

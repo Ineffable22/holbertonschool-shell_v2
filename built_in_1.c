@@ -35,11 +35,20 @@ general *who_am_i(general *go)
 	envi *section = NULL;
 	char *user = "USER";
 
+	go->bol = 1;
 	if (go->token[1] == NULL)
 	{
 		section = search_env(user, go->env);
-		printf("%s\n", section->value);
-		go->res = 0;
+		if (section == NULL)
+		{
+			go->res = 0;
+			go->bol = 0;
+		}
+		else
+		{
+			printf("%s\n", section->value);
+			go->res = 0;
+		}
 	}
 	else
 	{
@@ -47,7 +56,6 @@ general *who_am_i(general *go)
 		printf("Try 'whoami --help' for more information.\n");
 		go->res = 1;
 	}
-	go->bol = 1;
 	return (go);
 }
 
@@ -82,7 +90,8 @@ general *change_directory(general *go)
 	if (go->token[1] == NULL || *go->token[1] == '~' ||
 	_strcmp(go->token[1], "$HOME") == 0)
 	{
-		section = search_env("HOME", go->env), chdir(section->value);
+		section = search_env("HOME", go->env);
+		chdir(section ? section->value : path_old);
 	}
 	else if (go->token[2])
 	{
@@ -102,8 +111,8 @@ general *change_directory(general *go)
 		{
 			section = search_env("OLDPWD", go->env);
 			if (!isatty(STDIN_FILENO))
-				printf("%s\n", section->value);
-			chdir(section->value);
+				printf("%s\n", section ? section->value : path_old);
+			chdir(section ? section->value : path_old);
 		}
 	}
 	else if (chdir(go->token[1]) == -1)
@@ -111,8 +120,7 @@ general *change_directory(general *go)
 	if (bol == 0)
 		getcwd(path_new, sizeof(path_new));
 	go->env = set_env("OLDPWD", path_old, go->env);
-	go->env = set_env("PWD", path_new, go->env);
-	go->bol = 1;
+	go->env = set_env("PWD", path_new, go->env), go->bol = 1;
 	return (go);
 }
 
