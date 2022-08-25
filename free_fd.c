@@ -55,16 +55,21 @@ general *_free_fd(general *go)
  */
 int _atoi(char *str, int *res)
 {
-	int i = _strlen(str) - 1, j = 1;
+	int i = 0, j = 1;
 	int abs = 1, zero = 0;
 	int num = 0;
 
-	if (str[0] == '-' && str[1])
+	if (str[0] == '-')
 	{
-		abs = -1;
-		zero++;
+		if (str[1] == '-' && !str[2])
+			return (num);
+		else if (str[1])
+		{	
+			abs = -1;
+			zero++;
+		}
 	}
-	for (; i >= zero; i--)
+	for (i = _strlen(str) - 1; i >= zero; i--)
 	{
 		if (str[i] - 48 < 0 || str[i] - 48 > 9)
 		{
