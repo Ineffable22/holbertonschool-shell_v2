@@ -59,7 +59,8 @@ void precmd(general *go, char *file)
 
 	while ((line = _getline(fd)) != NULL)
 	{
-		go = go_bypass(go, line);
+		if (_strlen(line) != 0)
+			go = go_bypass(go, line);
 		free(line);
 	}
 	close(fd);
