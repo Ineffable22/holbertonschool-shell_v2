@@ -1,0 +1,160 @@
+#include "main.h"
+
+/**
+ * print_working_directory - Print the name of the current working directory
+ * @go: Pointer to Structure General
+ *
+ * Return: Pointer to Structure General
+ */
+general *print_working_directory(general *go)
+{
+	envi *section = NULL;
+
+	section = search_env("PWD", go->env);
+	printf("%s\n", section->value);
+	go->res = 0;
+	go->bol = 1;
+	return (go);
+}
+
+/**
+ * exit_time - Exits the program with a status code
+ * @go: Pointer to Structure General
+ *
+ * Return: Pointer to Structure General
+ */
+general *exit_time(general *go)
+{
+	int num = 0;
+
+	if (go->token[1] == NULL)
+	{
+		free(go->buff);
+		_free_env(go->env, go->PS1);
+		_free_double(go->token);
+		_free_tkn(go->tkn);
+		free(go);
+		exit(0);
+	}
+	if (go->token[2] != NULL)
+	{
+		go->msg = "too many arguments";
+		message_error(go, 0, NULL);
+		go->res = 1;
+		go->bol = 1;
+		return (go);
+	}
+	num = atoi(go->token[1]);
+	num = (num != 0) ? num : 2;
+	free(go->buff);
+	_free_env(go->env, go->PS1);
+	_free_double(go->token);
+	_free_tkn(go->tkn);
+	free(go);
+	exit(num);
+}
+
+/**
+ * shell_setenv - Set a value in the Singly linked list Envi
+ * @go: Pointer to Structure General
+ *
+ * Return: Pointer to Structure General
+ */
+general *shell_setenv(general *go)
+{
+	envi *env = NULL, *node = NULL, *tmp = go->env;
+
+	if (go->token[1] && go->token[2])
+	{
+		env = search_env(go->token[1], go->env);
+		if (env == NULL)
+		{
+			node = _calloc(1, sizeof(envi));
+			node->key = _calloc((_strlen(go->token[1]) + 1), sizeof(char));
+			_strcpy(node->key, go->token[1]);
+
+			node->value = _calloc((_strlen(go->token[2]) + 1), sizeof(char));
+			_strcpy(node->value, go->token[2]);
+			if (go->env == NULL)
+				go->env = node;
+			else
+			{
+				while (tmp->next)
+					tmp = tmp->next;
+
+				tmp->next = node;
+			}
+		}
+		else
+		{
+			while (tmp->key != env->key)
+				tmp = tmp->next;
+
+			free(tmp->value);
+			tmp->value = _calloc((_strlen(go->token[2]) + 1), sizeof(char));
+			_strcpy(tmp->value, go->token[2]);
+		}
+	}
+	go->res = 0;
+	go->bol = 1;
+	return (go);
+}
+
+/**
+ * shell_unsetenv - Unset a value in the Singly linked list Envi
+ * @go: Pointer to Structure General
+ *
+ * Return: Pointer to Structure General
+ */
+general *shell_unsetenv(general *go)
+{
+	envi *env = NULL, *prev = go->env, *tmp = go->env;
+
+	if (go->token[1])
+	{
+		env = search_env(go->token[1], go->env);
+		if (env)
+		{
+			while (tmp->key != env->key)
+			{
+				prev = tmp;
+				tmp = tmp->next;
+			}
+			prev->next = tmp->next;
+			free(tmp->key);
+			free(tmp->value);
+			free(tmp);
+		}
+	}
+	go->res = 0;
+	go->bol = 1;
+	return (go);
+}
+
+/**
+ * PS1 - Changes the prompt
+ * @go: Pointer to Structure General
+ *
+ * Return: Pointer to Structure General
+ */
+general *PS1(general *go)
+{
+	if (go->token[1] == NULL)
+		printf("Insert an argument\n");
+	else
+	{
+		if (go->PS1)
+			free(go->PS1);
+		go->PS1 = malloc((_strlen(go->token[1]) + 1) * sizeof(char));
+		if (go->PS1 == NULL)
+		{
+			fprintf(stderr, "Can't malloc\n");
+			exit(-1);
+		}
+		_strcpy(go->PS1, go->token[1]);
+	}
+	go->res = 0;
+	go->bol = 1;
+	return (go);
+
+}
