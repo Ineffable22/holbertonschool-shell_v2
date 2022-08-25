@@ -26,7 +26,7 @@ general *go_match(general *go)
 
 	for (i = 0; flag_store[i].c; i++)
 	{
-		res = strcmp(go->token[0], flag_store[i].c);
+		res = _strcmp(go->token[0], flag_store[i].c);
 		if (res == 0)
 		{
 			go = flag_store[i].f(go);
