@@ -87,7 +87,7 @@ void prompt(char *p, general *go)
 {
 	envi *home = search_env("HOME", go->env);
 	envi *path = NULL;
-	int len = strlen(home->value);
+	int len = _strlen(home->value);
 
 	if (go->PS1 == NULL)
 	{
