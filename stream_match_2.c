@@ -40,11 +40,12 @@ int semicolon(general *go, char *file, int res)
 	(void) go;
 	(void) file;
 	(void) res;
+
 	return (FIELD);
 }
 
 /**
- * ampersand - In Process
+ * ampersand - Gets an AND operator and terminate execution if it fails
  * @go: Pointer to Structure General
  * @file: Name of file or key
  * @res: File Descriptor Result
@@ -53,14 +54,15 @@ int semicolon(general *go, char *file, int res)
  */
 int ampersand(general *go, char *file, int res)
 {
-	(void) go;
 	(void) file;
 	(void) res;
+
+	go->operator = AND;
 	return (FIELD);
 }
 
 /**
- * double_pipe - In Process
+ * double_pipe - Gets an OR operator and terminate execution if it success
  * @go: Pointer to Structure General
  * @file: Name of file or key
  * @res: File Descriptor Result
@@ -69,9 +71,10 @@ int ampersand(general *go, char *file, int res)
  */
 int double_pipe(general *go, char *file, int res)
 {
-	(void) go;
 	(void) file;
 	(void) res;
+
+	go->operator = OR;
 	return (FIELD);
 }
 
@@ -86,9 +89,9 @@ int double_pipe(general *go, char *file, int res)
  */
 int hash(general *go, char *file, int res)
 {
-	(void) go;
 	(void) file;
 	(void) res;
+
 	go->end = 1;
 	return (FIELD);
 }

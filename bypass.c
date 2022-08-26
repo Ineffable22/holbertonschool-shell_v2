@@ -12,7 +12,7 @@ general *go_bypass(general *go, char *buffer)
 	go->buff = buffer;
 	go->bol = 0, go->end = 0, go->fd = -1, go->fd1 = -1;
 	go->field = NULL, go->tkn = NULL, go->token = NULL;
-	go->std_in = -1, go->std_out = -1;
+	go->std_in = -1, go->std_out = -1, go->operator = 0;
 
 	add_history(go);
 	while (add_token(go->env, go->res,

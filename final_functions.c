@@ -97,8 +97,7 @@ int functions_bin(general *go)
 {
 	pid_t child = 0;
 	int status = 0;
-	char *path = NULL;
-	char **env = NULL;
+	char *path = NULL, **env = NULL;
 
 	go->res = 0;
 	path = _access(go->token[0], go->env);
@@ -106,23 +105,31 @@ int functions_bin(general *go)
 		return (0);
 	env = get_env(go->env, env);
 	child = fork();
-	if (child < 0)
+	if (child == -1)
 	{
-		printf("An Error ocurred with Fork\n");
+		perror("An Error ocurred with Fork\n");
 		return (4);
 	}
 	else if (child == 0)
 	{
 		if (execve(path, go->token, env) == -1)
-		{
 			perror("socket failed");
-			_exit(1);
-		}
 		kill(getpid(), SIGKILL);
 	}
 	else
 	{
 		wait(&status);
+		if (status != 0)
+		{
+			go->res = 2;
+			if (go->operator == AND)
+				go->end = 1;
+		}
+		else
+		{
+			if (go->operator == OR)
+				go->end = 1;
+		}
 	}
 	_free_double(env);
 	if (_strcmp(go->token[0], path) != 0)

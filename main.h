@@ -17,6 +17,8 @@
 #define FAILED_MSG -2
 #define FIELD 1
 #define HEREDOC 2
+#define AND 1
+#define OR 2
 
 /* Checks the error type of a function */
 extern int errno;
@@ -40,6 +42,7 @@ extern int errno;
  * @field: Sets where a field ends
  * @end: Reports if commands finished
  * @is_file: Reports if it's reading a file
+ * @operator: Logical operator AND - OR
  * @PS1: Saves the custom prompt
  * @env: Pointer to Struture Envi
  * @tkn: Pointer to Struture Tokens
@@ -60,6 +63,7 @@ typedef struct General
 	char *field;
 	int end;
 	int is_file;
+	int operator;
 	char *PS1;
 	struct Envi *env;
 	struct Tokens *tkn;
