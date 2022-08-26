@@ -121,7 +121,7 @@ int functions_bin(general *go)
 		wait(&status);
 		if (status != 0) /* signal-safety  */
 		{
-			go->res = 2;
+			go->res = WEXITSTATUS(status);/* fault state */
 			if (go->operator == AND)
 				go->end = 1;
 		}
