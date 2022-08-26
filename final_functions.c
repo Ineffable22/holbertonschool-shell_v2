@@ -106,7 +106,7 @@ int functions_bin(general *go)
 		return (0);
 	env = get_env(go->env, env);
 	child = fork();
-	if (child == -1)
+	if (child < 0)
 	{
 		printf("An Error ocurred with Fork\n");
 		return (4);
@@ -114,16 +114,19 @@ int functions_bin(general *go)
 	else if (child == 0)
 	{
 		if (execve(path, go->token, env) == -1)
+		{
 			perror("socket failed");
-		close(4);
+			_exit(1);
+		}
 		kill(getpid(), SIGKILL);
 	}
-	else if (child > 0)
+	else
 	{
 		wait(&status);
 	}
 	_free_double(env);
-	free(path);
+	if (_strcmp(go->token[0], path) != 0)
+		free(path);
 	return (1);
 }
 
@@ -175,6 +178,8 @@ char *_access(char *token, envi *env)
 		if (!token[1] || (token[1] == '.' && !token[2]))
 			return (NULL);
 	}
+	if (access(token, X_OK) == 0)
+		return (token);
 	section = search_env("PATH", env);
 	if (section == NULL)
 		return (NULL);
