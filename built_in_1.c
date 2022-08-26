@@ -86,18 +86,16 @@ general *change_directory(general *go)
 	envi *section = NULL;
 	int bol = 0;
 
-	getcwd(path_old, sizeof(path_old));
+	go->bol = 1, getcwd(path_old, sizeof(path_old));
 	if (go->token[1] == NULL || *go->token[1] == '~' ||
 	_strcmp(go->token[1], "$HOME") == 0)
 	{
 		section = search_env("HOME", go->env);
 		chdir(section ? section->value : path_old);
 	}
-	else if (go->token[2])
-	{
-		printf("%s: %d: cd: too many arguments\n", go->exe, go->n);
-		go->res = 1, bol = 1;
-	}
+	/* else if (go->token[2]) Ubuntu 20.04 LTS */
+	/* printf("%s: %d: cd: too many arguments\n", go->exe, go->n); */
+	/* go->res = 1, bol = 1; */
 	else if ((go->token[1])[0] == '-')
 	{
 		if ((go->token[1])[1])
@@ -118,9 +116,11 @@ general *change_directory(general *go)
 	else if (chdir(go->token[1]) == -1)
 		errno_case(go), bol = 1, go->res = 1;
 	if (bol == 0)
+	{
 		getcwd(path_new, sizeof(path_new));
-	go->env = set_env("OLDPWD", path_old, go->env);
-	go->env = set_env("PWD", path_new, go->env), go->bol = 1;
+		go->env = set_env("OLDPWD", path_old, go->env);
+		go->env = set_env("PWD", path_new, go->env), go->bol = 1;
+	}
 	return (go);
 }
 
@@ -141,7 +141,7 @@ void errno_case(general *go)
 		go->msg = "Path is too long";
 		break;
 	case ENOTDIR:
-		go->msg = "No such file or directory";
+		go->msg = "Not a directory";
 		break;
 	case ENOMEM:
 		go->msg = "Insufficient kernel memory was available";
