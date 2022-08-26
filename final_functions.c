@@ -119,7 +119,7 @@ int functions_bin(general *go)
 	else
 	{
 		wait(&status);
-		if (status != 0)
+		if (status != 0) /* signal-safety  */
 		{
 			go->res = 2;
 			if (go->operator == AND)

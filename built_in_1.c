@@ -93,9 +93,9 @@ general *change_directory(general *go)
 		section = search_env("HOME", go->env);
 		chdir(section ? section->value : path_old);
 	}
-	/* else if (go->token[2]) Ubuntu 20.04 LTS */
-	/* printf("%s: %d: cd: too many arguments\n", go->exe, go->n); */
-	/* go->res = 1, bol = 1; */
+	else if (go->token[2])
+		printf("%s: %d: cd: too many arguments\n", go->exe, go->n),
+			go->res = 1, bol = 1;
 	else if ((go->token[1])[0] == '-')
 	{
 		if ((go->token[1])[1])
