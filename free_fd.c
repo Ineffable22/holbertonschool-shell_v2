@@ -84,3 +84,24 @@ int _atoi(char *str, int *res)
 	}
 	return (num * abs);
 }
+
+general *check_parent(general *go, int status)
+{
+	if (status != 0) /* signal-safety  */
+	{
+		go->res = WEXITSTATUS(status);/* fault state */
+		if (go->operator == AND)
+			go->end = 1;
+		if (go->res == 126)
+		{
+			go->msg = "Permission denied";
+			message_error(go, 2, NULL);
+		}
+	}
+	else
+	{
+		if (go->operator == OR)
+			go->end = 1;
+	}
+	return (go);
+}
