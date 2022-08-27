@@ -169,7 +169,7 @@ char **get_env(envi *env, char **environ)
 char *_access(char *token, envi *env)
 {
 	envi *section = NULL;
-	int start = 0, end = 0, len = _strlen(token);
+	int start = 0, end = 0, bol = 0, len = _strlen(token);
 	char *exe = NULL;
 	char *file = NULL;
 
@@ -187,10 +187,12 @@ char *_access(char *token, envi *env)
 	_strcpy(file, "/");
 	_strcpy(&file[1], token);
 	len = _strlen(file);
-	for (end = 0; section->value[end]; end++)
+	for (end = 0; bol != 1 && section->value[end]; end++)
 	{
-		if (section->value[end] == ':')
+		if (section->value[end] == ':' || section->value[end + 1] == '\0')
 		{
+			if (section->value[end + 1] == '\0')
+				end++, bol = 1;
 			exe = _calloc(len + (end - start) + 1, sizeof(char));
 			_strncpy(exe, &section->value[start], end - start);
 			_strcpy(&exe[end - start], file);
