@@ -8,10 +8,9 @@
  */
 general *print_working_directory(general *go)
 {
-	envi *section = NULL;
+	char buff[1024];
 
-	section = search_env("PWD", go->env);
-	printf("%s\n", section->value);
+	printf("%s\n", getcwd(buff, 1024));
 	go->res = 0;
 	go->bol = 1;
 	return (go);
