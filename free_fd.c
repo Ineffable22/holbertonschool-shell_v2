@@ -85,6 +85,13 @@ int _atoi(char *str, int *res)
 	return (num * abs);
 }
 
+/**
+ * check_parent - Checks status code
+ * @go: Pointer to Structure General
+ * @status: Number to check
+ *
+ * Return: Pointer to Structure General
+ */
 general *check_parent(general *go, int status)
 {
 	if (status != 0) /* signal-safety  */
