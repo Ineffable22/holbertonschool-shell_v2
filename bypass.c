@@ -14,8 +14,7 @@ general *go_bypass(general *go, char *buffer)
 	go->field = NULL, go->tkn = NULL, go->token = NULL;
 	go->std_in = -1, go->std_out = -1, go->operator = 0;
 	add_history(go);
-	while (add_token(go->env, go->res,
-	&(go->tkn), strtok(buffer, " \t\n")) != NULL)
+	while (add_token(&(go->tkn), strtok(buffer, " \t\n")) != NULL)
 		buffer = NULL;
 	if (go->tkn == NULL || *go->tkn->token == '#')
 	{
@@ -59,6 +58,7 @@ general *validate_stream(general *go)
 	tokens *finder = go->tkn;
 	tokens *carry = NULL, *cmd = NULL;
 	int total = 0, i = 0, res = 0;
+	char *var = NULL;
 
 	if (go->field)
 		while (finder->token != go->field)
@@ -82,8 +82,7 @@ general *validate_stream(general *go)
 			go->field = cmd->next->token;
 		else
 		{
-			go->field = finder->next->token;
-			cmd = finder;
+			go->field = finder->next->token, cmd = finder;
 		}
 	}
 	if (res == SUCCESS || res == 10)
@@ -91,9 +90,9 @@ general *validate_stream(general *go)
 	go->token = _calloc((total + 1), sizeof(char *));
 	while (carry != cmd)
 	{
-		go->token[i] = _calloc(_strlen(carry->token) + 1, sizeof(char));
-		_strcpy(go->token[i], carry->token);
-		carry = carry->next, i++;
+		var = is_var(go->env, carry->token, go->res);
+		go->token[i] = _calloc(_strlen(var) + 1, sizeof(char));
+		_strcpy(go->token[i], var), carry = carry->next, i++;
 	}
 	return (go);
 }
@@ -135,31 +134,26 @@ char *is_var(envi *env, char *buffer, int res)
 
 /**
  * add_token - Saves the token in the singly linked list Token
- * @env: Pointer to Singly linked list with the environment variables
- * @res: Status code
  * @token: Pointer to Singly linked list with the tokens
  * @buffer: Value to insert in the node
  *
  * Return: Singly linked list with the tokens
  */
-tokens *add_token(envi *env, int res, tokens **token, char *buffer)
+tokens *add_token(tokens **token, char *buffer)
 {
 	tokens *node = NULL, *tmp = (*token);
-	char *var = buffer;
 
 	if (buffer == NULL)
 		return (NULL);
 	node = _calloc(1, sizeof(tokens));
-	if (env)
-		var = is_var(env, buffer, res);
 
-	node->token = _calloc(_strlen(var) + 1, sizeof(char));
+	node->token = _calloc(_strlen(buffer) + 1, sizeof(char));
 	if (node->token == NULL)
 	{
 		fprintf(stderr, "Can't malloc\n");
 		return (NULL);
 	}
-	_strcpy(node->token, var);
+	_strcpy(node->token, buffer);
 	node->next = NULL;
 
 	if ((*token) == NULL)
