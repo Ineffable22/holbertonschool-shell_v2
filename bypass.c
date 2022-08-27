@@ -30,6 +30,7 @@ general *go_bypass(general *go, char *buffer)
 				go->bol = functions_bin(go);
 			if (go->bol == 0)
 			{
+				go->msg = (go->res == 0) ? "command not found" : "not found";
 				go->res = (go->res == 0) ? 127 : 2;
 				message_error(go, 2, NULL);
 			}
