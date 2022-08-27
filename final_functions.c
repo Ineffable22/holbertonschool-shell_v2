@@ -103,33 +103,25 @@ int functions_bin(general *go)
 	path = _access(go->token[0], go->env);
 	if (path == NULL)
 		return (0);
+
 	env = get_env(go->env, env);
 	child = fork();
 	if (child == -1)
-	{
 		perror("An Error ocurred with Fork\n");
-		return (4);
-	}
 	else if (child == 0)
 	{
 		if (execve(path, go->token, env) == -1)
-			perror("socket failed");
+		{
+			if (errno == EACCES)
+				exit(126);
+			_exit(1);
+		}
 		kill(getpid(), SIGKILL);
 	}
 	else
 	{
 		wait(&status);
-		if (status != 0) /* signal-safety  */
-		{
-			go->res = WEXITSTATUS(status);/* fault state */
-			if (go->operator == AND)
-				go->end = 1;
-		}
-		else
-		{
-			if (go->operator == OR)
-				go->end = 1;
-		}
+		go = check_parent(go, status);
 	}
 	_free_double(env);
 	if (_strcmp(go->token[0], path) != 0)
@@ -185,7 +177,7 @@ char *_access(char *token, envi *env)
 		if (!token[1] || (token[1] == '.' && !token[2]))
 			return (NULL);
 	}
-	if (access(token, X_OK) == 0)
+	if (access(token, F_OK) == 0)
 		return (token);
 	section = search_env("PATH", env);
 	if (section == NULL)
@@ -201,7 +193,7 @@ char *_access(char *token, envi *env)
 			exe = _calloc(len + (end - start) + 1, sizeof(char));
 			_strncpy(exe, &section->value[start], end - start);
 			_strcpy(&exe[end - start], file);
-			if (access(exe, X_OK) == 0)
+			if (access(exe, F_OK) == 0)
 			{
 				free(file);
 				return (exe);
