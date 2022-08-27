@@ -9,18 +9,17 @@ CFLAGS = -Wall -Werror -Wextra -pedantic
 GFLAG = -g
 VFLAGS = --tool=memcheck --track-origins=yes --leak-check=full --show-leak-kinds=all -s
 
-all: clean run
-	./$(NAME)
-
-run: *.h *.c
+all: clean *.h *.c
 	$(CC) $(SRC) $(CFLAGS) -o $(NAME)
+run: 
+	./$(NAME)
 
 rungdb: *.h *.c
 	$(CC) $(SRC) $(CFLAGS) $(GFLAG) -o $(NAME)
 	$(GDB) $(NAME)
 
 # optional ARGS="FILENAME"
-val: run
+val: all
 	$(VAL) $(VFLAGS) ./$(NAME) $(ARGS)
 
 betty:
