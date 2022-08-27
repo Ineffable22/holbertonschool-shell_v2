@@ -101,14 +101,14 @@ void message_error(general *go, char val, char *tok)
 	else if (val == 2)
 	{
 		if (isatty(STDIN_FILENO) && go->env)
-			printf("%s: command not found\n", go->token[0]);
+			printf("%s: %s\n", go->token[0], go->msg);
 		else
 		{
 			if (go->res == 2)
 				printf("%s: %d: '%s %s %s'\n", go->exe, go->n,
 				go->token[0], go->token[1], go->token[2]);
 			else
-				printf("%s: %d: %s: not found\n", go->exe, go->n, go->token[0]);
+				printf("%s: %d: %s: %s\n", go->exe, go->n, go->token[0], go->msg);
 		}
 	}
 }
