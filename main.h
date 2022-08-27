@@ -137,7 +137,7 @@ void prompt(char *p, general *go);
 general *go_bypass(general *go, char *buffer);
 general *validate_stream(general *go);
 char *is_var(envi *env, char *buffer, int res);
-tokens *add_token(envi *env, int res, tokens **token, char *buffer);
+tokens *add_token(tokens **token, char *buffer);
 void add_history(general *buff);
 
 /*_____free_fd.c_____*/
