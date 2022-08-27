@@ -80,19 +80,26 @@ char *_realloc(char *ptr, unsigned int size)
  * _lexers_cmp - Compares two strings
  * @s1: First string to compare
  * @s2: Second string to compare
+ * @i: Ubication of pointer function
  *
  * Return: 1 if they are equal, -1 if it fails, and n if it has FD
  */
-int _lexers_cmp(char *s1, char *s2)
+int _lexers_cmp(char *s1, char *s2, int i)
 {
 	int n = 0;
 
 	if (_strcmp(s1, s2) == 0)
 		return (1);
-	n = *s1 - 48;
-	s1++;
-	if (_strcmp(s1, s2) == 0)
-		return (n);
+	if (i == 0)
+	{
+		n = *s1 - 48;
+		if (n >= 0 && n <= 9)
+		{
+			s1++;
+			if (_strcmp(s1, s2) == 0)
+				return (n);
+		}
+	}
 	return (-1);
 }
 

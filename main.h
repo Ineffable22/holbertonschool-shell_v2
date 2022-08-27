@@ -166,6 +166,9 @@ general *shell_setenv(general *go);
 general *shell_unsetenv(general *go);
 general *PS1(general *go);
 
+/*_____built_in_3.c_____*/
+general *alias(general *go);
+
 /*_____final_functions.c_____*/
 general *built_in(general *go);
 int stream_match(general *go, tokens *tk, char *exe);
@@ -204,7 +207,7 @@ char *_strncpy(char *dest, char *src, int n);
 int _strncmp(char *s1, char *s2, int n);
 void *_calloc(unsigned int nmemb, unsigned int size);
 char *_realloc(char *ptr, unsigned int size);
-int _lexers_cmp(char *s1, char *s2);
+int _lexers_cmp(char *s1, char *s2, int i);
 char *itoa(int val, int base);
 
 #endif

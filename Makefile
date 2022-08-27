@@ -1,7 +1,9 @@
 CC = gcc
 VAL = valgrind
 GDB = gdb
+BETTY = betty
 SRC = *.c
+HEADER = *.h
 NAME = hsh
 CFLAGS = -Wall -Werror -Wextra -pedantic
 GFLAG = -g
@@ -20,6 +22,9 @@ rungdb: *.h *.c
 # optional ARGS="FILENAME"
 val: run
 	$(VAL) $(VFLAGS) ./$(NAME) $(ARGS)
+
+betty:
+	$(BETTY) $(SRC) $(HEADER)
 
 clean:
 	$(RM) *~ $(NAME)

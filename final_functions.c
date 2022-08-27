@@ -20,6 +20,7 @@ general *built_in(general *go)
 		{"unsetenv", shell_unsetenv},
 		{"history", history},
 		{"help", help},
+		{"alias", alias},
 		{"PS1", PS1},
 		{NULL, NULL}
 	};
@@ -63,17 +64,17 @@ int stream_match(general *go, tokens *tk, char *exe)
 
 	for (i = 0; flag_store[i].c; i++)
 	{
-		fd = _lexers_cmp(tk->token, flag_store[i].c);
+		fd = _lexers_cmp(tk->token, flag_store[i].c, i);
 		if (fd >= 0 && fd < 10)
 		{
-			if (tk->next == NULL)
+			if (tk->next == NULL && *flag_store[i].c != '#')
 			{
 				printf("%s: syntax error near unexpected token `newline'\n", exe);
 				go->res = 2;
 				go->end = 1;
 				return (FAILED_MSG);
 			}
-			else
+			else if (tk->next)
 				res = flag_store[i].f(go, tk->next->token, fd);
 			if (res == FAILED)
 			{
