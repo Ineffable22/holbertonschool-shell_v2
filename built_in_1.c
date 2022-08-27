@@ -8,6 +8,14 @@
  */
 general *print_env(general *go)
 {
+	if (!go->env)
+	{
+		go->msg = "No such file or directory";
+		message_error(go, 0, NULL);
+		go->res = 127;
+		go->bol = 1;
+		return (go);
+	}
 	if (go->token[1] == NULL)
 	{
 		printer(go->env);
@@ -60,21 +68,6 @@ general *who_am_i(general *go)
 }
 
 /**
- * shell_clear - Clears the terminal screen
- * @go: Pointer to Structure General
- *
- * Return: Pointer to Structure General
- */
-general *shell_clear(general *go)
-{
-	system("clear");
-	go->res = 0;
-	go->bol = 1;
-	return (go);
-}
-
-
-/**
  * change_directory - Changes the working directory
  * @go: Pointer to Structure General
  *
@@ -86,44 +79,79 @@ general *change_directory(general *go)
 	envi *section = NULL;
 	int bol = 0;
 
-	go->bol = 1, getcwd(path_old, sizeof(path_old));
-	if (go->token[1] == NULL || *go->token[1] == '~' ||
-	_strcmp(go->token[1], "$HOME") == 0)
+	go->bol = 1, getcwd(path_old, BUFSIZ);
+	if (go->token[1] == NULL || _strcmp(go->token[1], "$HOME") == 0 ||
+	_strcmp(go->token[1], "--") == 0)
 	{
 		section = search_env("HOME", go->env);
-		chdir(section ? section->value : path_old);
-	}
-	else if (go->token[2])
-		printf("%s: %d: cd: too many arguments\n", go->exe, go->n),
-			go->res = 1, bol = 1;
-	else if ((go->token[1])[0] == '-')
-	{
-		if ((go->token[1])[1])
+		if (section == NULL)
 		{
-			printf("%s: %d: cd: -%c: invalid option\n",
-			go->exe, go->n, (go->token[1])[1]);
-			printf("cd: usage: cd [-L|[-P [-e]] [-@]] [dir]\n");
-			go->res = 2, bol = 1;
+			go->msg = "HOME not set";
+			message_error(go, 0, NULL);
+			bol = 1;
 		}
 		else
-		{
+			chdir(section->value);
+	}
+	else if (_strcmp(go->token[1], "~") == 0)
+	{
+		section = search_env("HOME", go->env);
+		if (section == NULL)
 			section = search_env("OLDPWD", go->env);
-			if (!isatty(STDIN_FILENO))
-				printf("%s\n", section ? section->value : path_old);
-			chdir(section ? section->value : path_old);
-		}
+		chdir(section ? section->value : path_old);
+	}
+	else if ((go->token[1])[0] == '-')
+	{
+		bol = middle_dash(go, bol, path_old);
 	}
 	else if (chdir(go->token[1]) == -1)
 		errno_case(go), bol = 1, go->res = 1;
 	if (bol == 0)
 	{
-		getcwd(path_new, sizeof(path_new));
+		getcwd(path_new, BUFSIZ);
 		go->env = set_env("OLDPWD", path_old, go->env);
-		go->env = set_env("PWD", path_new, go->env), go->bol = 1;
+		go->env = set_env("PWD", path_new, go->env);
 	}
 	return (go);
 }
 
+/**
+ * middle_dash - middle dash option
+ * @go: Pointer to Structure General
+ * @bol: bolean to validate
+ * @path_old: old pwd
+ *
+ * Return: Pointer to Structure General
+ */
+int middle_dash(general *go, int bol, char *path_old)
+{
+	envi *section = NULL;
+
+	if ((go->token[1])[1])
+	{
+		printf("%s: %d: cd: -%c: invalid option\n",
+		go->exe, go->n, (go->token[1])[1]);
+		printf("cd: usage: cd [-L|[-P [-e]] [-@]] [dir]\n");
+		go->res = 2, bol = 1;
+	}
+	else
+	{
+		section = search_env("OLDPWD", go->env);
+		if (section == NULL)
+		{
+			go->msg = "OLDPWD not set";
+			message_error(go, 0, NULL);
+			bol = 1;
+		}
+		else
+		{
+			if (!isatty(STDIN_FILENO))
+				printf("%s\n", section ? section->value : path_old);
+			chdir(section->value);
+		}
+	}
+	return (bol);
+}
 /**
  * errno_case - Sets and prints error
  * @go: Pointer to Structure General

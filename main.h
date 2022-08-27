@@ -155,18 +155,19 @@ general *help(general *go);
 /*_____built_in_1.c_____*/
 general *print_env(general *go);
 general *who_am_i(general *go);
-general *shell_clear(general *go);
 general *change_directory(general *go);
+int middle_dash(general *go, int bol, char *path_old);
 void errno_case(general *go);
 
 /*_____built_in_2.c_____*/
+general *shell_clear(general *go);
 general *print_working_directory(general *go);
 general *exit_time(general *go);
 general *shell_setenv(general *go);
 general *shell_unsetenv(general *go);
-general *PS1(general *go);
 
 /*_____built_in_3.c_____*/
+general *PS1(general *go);
 general *alias(general *go);
 
 /*_____final_functions.c_____*/

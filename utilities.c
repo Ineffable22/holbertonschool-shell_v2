@@ -85,10 +85,21 @@ void message_error(general *go, char val, char *tok)
 	if (val == 0)
 	{
 		if (isatty(STDIN_FILENO))
-			printf("%s: %s: %s: %s\n", go->exe, go->token[0], go->msg, go->token[1]);
+		{
+			if (go->token[1] && tok)
+				printf("%s: %s: %s: %s\n", go->exe, go->token[0], go->msg, go->token[1]);
+			else
+				printf("%s: %s: %s\n", go->exe, go->token[0], go->msg);
+		}
 		else
-			printf("%s: %d: %s: %s: %s\n", go->exe, go->n,
-			go->token[0], go->token[1], go->msg);
+		{
+			if (go->token[1] && tok)
+				printf("%s: %d: %s: %s: %s\n", go->exe, go->n,
+				go->token[0], go->token[1], go->msg);
+			else
+				printf("%s: %d: %s: %s\n", go->exe, go->n,
+				go->token[0], go->msg);
+		}
 	}
 	else if (val == 1)
 	{
