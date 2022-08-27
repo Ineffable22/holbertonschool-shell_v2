@@ -17,8 +17,12 @@ general *go_bypass(general *go, char *buffer)
 	while (add_token(go->env, go->res,
 	&(go->tkn), strtok(buffer, " \t\n")) != NULL)
 		buffer = NULL;
-	if (go->tkn == NULL || _strcmp(go->tkn->token, "#") == 0)
+	if (go->tkn == NULL || *go->tkn->token == '#')
+	{
+		if (go->tkn)
+			_free_tkn(go->tkn);
 		return (go);
+	}
 	while (go->end == 0)
 	{
 		go->res = 0;
