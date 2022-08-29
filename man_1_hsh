@@ -1,0 +1,60 @@
+.\" Manpage for asd.
+.\" Contact vivek@nixcraft.net.in to correct errors or typos.
+.TH hsh 1 "28 August 2022" "1.0" "Holberton Shell man page"
+.SH NAME
+    hsh - create a Shell
+.SH SYNOPSIS
+    hsh [FILE]
+.SH DESCRIPTION
+The Shell_v2 repository contains files from my version of Shell, but a second version more advanced to Simple_shell, which is a UNIX shell based on bash and Sh. This is my command line version of the interpreter it is written in C language.
+
+This shell starts reading .hshrc and then optionally reads the first argument represented by a file and executes all internal commands. Then it prints a prompt and starts reading the commands. And what's more, it creates a history per command inserted.
+.SH COMMANDS
+PATH functions
+
+		Functions inside the path
+
+built-in
+
+		env             - Prints Environment
+
+		whoami          - Display the effective user ID
+
+		clear		- Clears the terminal screen
+
+		cd              - Changes the working directory
+
+		pwd             - Prints the name of the current working directory
+
+		exit            - Exits the program with a status code
+
+		setenv          - Set a value in the Environment
+
+		unsetenv        - Unset a value in the Environment
+
+		history         - Prints the command history
+
+		help            - Prints the help manual
+
+		alias           - Prints alias
+
+		PS1             - Changes the prompt
+
+.SH EXAMPLES
+#Cisfun:~/holbertonschool-shell_v2$ echo Hello
+
+Hello
+
+#Cisfun:~/holbertonschool-shell_v2$ cd
+
+#Cisfun:~$ cd /tmp
+
+#Cisfun:/tmp$ pwd
+
+/tmp
+
+#Cisfun:/tmp$
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+Ineffable (Miguel Grillo)
