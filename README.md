@@ -2,7 +2,7 @@
 <img src="https://raw.githubusercontent.com/Ineffable22/holbertonschool-shell_v2/main/img/shell.jpeg"/>
 
 ## Overview
-The Shell_v2 repository contains files from my version of Shell, but a second version more advanced to Simple_shell, which is a UNIX shell based on bash and Sh.  This  is  my  command line version of the interpreter it is written in C language. 
+The Shell_v2 repository contains files from my version of Shell, but a second version more advanced to [Simple_shell](https://github.com/Ineffable22/simple_shell), which is a UNIX shell based on bash and Sh.  This  is  my  command line version of the interpreter it is written in C language. 
 
 <div align="center">
 <img src="https://raw.githubusercontent.com/Ineffable22/holbertonschool-shell_v2/main/img/Ken_thompson_japan_prize_68.jpg"/>
@@ -19,7 +19,9 @@ This shell starts reading .hshrc and then optionally reads the first argument re
 - Commands inside the path.
 
 ### Built-in
+
 | Command      | Description |
+|--|--|
 | **env**      | Prints Environment                               |
 | **whoami**   | Display the effective user ID                    |
 | **clear**    | Clears the terminal screen                       |
@@ -35,21 +37,23 @@ This shell starts reading .hshrc and then optionally reads the first argument re
 
 ### Advance commands
 - Redirections:
-    - `n<` n is a file descriptor.
-    - `<<`
-    - `>`
-    - `>>`
+    - `n>` Right stream redirection (n is a file descriptor).
+    - `>>` Double right stream redirection (Append).
+    - `<`  Left stream redirection.
+    - `<<` Heredoc (Double left stream redirection).
 - Logical operators:
-    - `&&`
-    - `||`
+    - `&&` Handle the AND logical operator
+    - `||` Handle the OR logical operator
 - Separator:
-    - `;`
+    - `;` Handle the commands separator.
 - Comments: 
-    - `#`
+    - `#` Handle comments.
 - Variables:
-    - `$?`
-    - `$$`
-    - `$PATH or another variable of the Environment`
+    - `$?` Status Code
+    - `$$` Currend PID(Process ID)
+    - `$variable` Handles an Environment variable like `$PATH`
+- Signal:
+    - `^C` Ctrl + C
 
 ## Compilation
 Usage: `hsh`
