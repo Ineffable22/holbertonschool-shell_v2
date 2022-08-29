@@ -15,7 +15,7 @@ general *shell_clear(general *go)
 }
 
 /**
- * print_working_directory - Print the name of the current working directory
+ * print_working_directory - Prints the name of the current working directory
  * @go: Pointer to Structure General
  *
  * Return: Pointer to Structure General
